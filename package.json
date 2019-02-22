@@ -1,0 +1,24 @@
+{
+  "name": "csci4610-chessbot",
+  "version": "1.0.0",
+  "description": "A chess AI designed for CSCI4610.",
+  "main": "main.js",
+  "dependencies": {
+    "chess.js": "^0.10.2",
+    "chessboardjs": "^0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshualemmon/CSCI4610---Chessbot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshualemmon/CSCI4610---Chessbot/issues"
+  },
+  "homepage": "https://github.com/joshualemmon/CSCI4610---Chessbot#readme"
+}
