@@ -4,7 +4,7 @@
 To run the application, type nodejs main.js into the console. 
 Then, navigate to localhost:3000/default.html in your browser.
 
-#THINGS TO DO 
+# THINGS TO DO 
 1. Minmax Decision Searching 
 2. Alpha Beta Pruning
 3. Piece-Square Tables
