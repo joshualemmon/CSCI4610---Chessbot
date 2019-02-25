@@ -4,6 +4,10 @@
 To run the application, type nodejs main.js into the console. 
 Then, navigate to localhost:3000/default.html in your browser.
 
+# Modifying AI
+The behaviour of the AI and chessboard in general in located in public/default.js.
+Modifying the AI can be done there.
+
 # THINGS TO DO 
 1. Minmax Decision Searching 
 2. Alpha Beta Pruning
