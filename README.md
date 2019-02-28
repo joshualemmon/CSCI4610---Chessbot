@@ -9,4 +9,3 @@ Then, navigate to localhost:3000/default.html in your browser.
 2. Alpha Beta Pruning
 3. Piece-Square Tables
 4. Move Ordering
-5. Endgame knowledge
