@@ -1,5 +1,12 @@
 var game = new Chess();
 var board;
+
+var pieceWeight = {w: {p: 10, n: 30, b: 30, r: 50, q: 90, k: 900},
+                   b: {p: -10, n: -30, b: -30, r: -50, q: -90, k: -900}};
+
+var pieces = {w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1},
+              b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}};
+
 //only allows white pieces to be picked up, only lets you pick up pieces if the game isn't over
 var onDragStart = function(source, piece, position, orientation) {
   if (game.in_checkmate() === true || game.in_draw() === true || piece.search(/^b/) !== -1) {
@@ -18,14 +25,13 @@ var makeRandomMove = function() {
   board.position(game.fen());
 };
 
-
 var handleMove = function(source, target) {
     var move = game.move({from: source, to: target});
 
     //undo move if illegal
     if (move == null) return 'snapback';
 
-    //black makes random legal move 
+    //black makes random legal move
     //will update this as we develop more of the ai
     window.setTimeout(makeRandomMove, 250);
 }
@@ -63,7 +69,7 @@ var removeGreySquares = function() {
 
 var greySquare = function(square) {
   var squareEl = $('#board .square-' + square);
-  
+
   var background = '#a9a9a9';
   if (squareEl.hasClass('black-3c85d') === true) {
     background = '#696969';
@@ -84,3 +90,10 @@ var cfg = {
     };
 console.log("Initializing chessboard");
 board = new ChessBoard('board', cfg);
+
+
+$(document).ready(function() {
+  $("#restart").click(function() {
+    location.reload();
+  });
+});
