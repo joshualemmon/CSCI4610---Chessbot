@@ -25,6 +25,73 @@ var makeRandomMove = function() {
   board.position(game.fen());
 };
 
+var evaluateBoard = function(game, min) {
+  var boardState = game;
+  var wPawns = 0;
+  var wRooks = 0;
+  var wKnights = 0;
+  var wQueens = 0;
+  var wKings = 0;
+  var wBishops = 0;
+
+  var bPawns = 0;
+  var bRooks = 0;
+  var bKnights = 0;
+  var bQueens = 0;
+  var bKings = 0;
+  var bBishops = 0;
+
+  // count each piece on the board
+  for (var i = 0; i < boardState.length; i++) {
+    switch (boardState[i]) {
+      case 'p': wPawns++; break;
+      case 'r': wRooks++; break;
+      case 'n': wKnights++; break;
+      case 'q': wQueens++; break;
+      case 'k': wKings++; break;
+      case 'b': wBishops++; break;
+      case 'P': bPawns++; break;
+      case 'R': bRooks++; break;
+      case 'N': bKnights++; break;
+      case 'Q': bQueens++; break;
+      case 'K': bKings++; break;
+      case 'B': bBishops++; break;
+    }
+  }
+
+  // calculate value for both sides based on piece strength
+  var wValue = wPawns * 10 + wKnights * 30 + wBishops * 30
+                + wRooks * 50 + wQueens * 90 + wKings * 900;
+
+  var bValue =  bPawns * 10 + bKnights * 30 + bBishops * 30
+                + bRooks * 50 + bQueens * 90 + bKings * 900;
+
+  // return the white value if minimizing
+  if (min) return wValue;
+  return bValue;
+}
+
+var makeMiniMaxMove = function() {
+  var possibleMoves = game.moves();
+  var bestMove = null;
+  var currentHighestValue = -999;
+
+  if (possibleMoves.length === 0) return;
+
+  for (var i = 0; i < possibleMoves.length; i++) {
+    game.move(possibleMoves[i]);
+    var moveValue = evaluateBoard(game.fen(), true);
+    game.undo();
+
+    if (moveValue > currentHighestValue) {
+      currentHighestValue = moveValue;
+      bestMove = possibleMoves[i];
+    }
+  }
+  game.move(bestMove);
+  board.position(game.fen());
+}
+
 var handleMove = function(source, target) {
     var move = game.move({from: source, to: target});
 
@@ -33,7 +100,7 @@ var handleMove = function(source, target) {
 
     //black makes random legal move
     //will update this as we develop more of the ai
-    window.setTimeout(makeRandomMove, 250);
+    window.setTimeout(makeMiniMaxMove, 250);
 }
 
 var onSnapEnd = function() {
