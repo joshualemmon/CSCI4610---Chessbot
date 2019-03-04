@@ -98,7 +98,6 @@ var handleMove = function(source, target) {
     //undo move if illegal
     if (move == null) return 'snapback';
     removeGreySquares();
-    //black makes random legal move
     //will update this as we develop more of the ai
     window.setTimeout(makeMiniMaxMove, 250);
 }
