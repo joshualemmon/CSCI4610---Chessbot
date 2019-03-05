@@ -9,8 +9,8 @@ The behaviour of the AI and chessboard in general in located in public/default.j
 Modifying the AI can be done there.
 
 # THINGS TO DO 
-1. Minmax Decision Searching 
-2. Alpha Beta Pruning
+1. ---Minmax Decision Searching---
+2. ---Alpha Beta Pruning---
 3. Piece-Square Tables
 4. Move Ordering
 5. UI Improvements

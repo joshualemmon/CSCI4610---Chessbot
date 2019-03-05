@@ -14,17 +14,6 @@ var onDragStart = function(source, piece, position, orientation) {
   }
 };
 
-var makeRandomMove = function() {
-  var possibleMoves = game.moves();
-
-  // game over
-  if (possibleMoves.length === 0) return;
-
-  var randomIndex = Math.floor(Math.random() * possibleMoves.length);
-  game.move(possibleMoves[randomIndex]);
-  board.position(game.fen());
-};
-
 var evaluateBoard = function(game, colour) {
   var boardState = game.ascii();
   boardState = boardState.slice(0, boardState.length-24)
@@ -70,7 +59,7 @@ var evaluateBoard = function(game, colour) {
   return value
 }
 
-var makeMiniMaxMove = function(depth, game, colour, isMaximizing) {
+var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
   if (depth === 0) {
     return [evaluateBoard(game, colour), null];
   }
@@ -86,12 +75,14 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing) {
     bestVal = -999;
     for (var i = 0; i < possibleMoves.length; i++) {
       game.move(possibleMoves[i]);
-      moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing)[0];
+      moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing, alpha, beta)[0];
+      game.undo();
       if ( moveVal > bestVal) {
         bestVal = moveVal;
         bestMove = possibleMoves[i];
       }
-      game.undo();
+      alpha = Math.max(alpha, moveVal);
+      if (alpha >= beta) break;
     }
     return [bestVal, bestMove];
   }
@@ -99,19 +90,21 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing) {
     bestVal = 999;
     for (var i = 0; i < possibleMoves.length; i++) {
       game.move(possibleMoves[i]);
-      moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing)[0];
+      moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing, alpha, beta)[0];
+      game.undo();
       if ( moveVal < bestVal) {
         bestVal = moveVal;
         bestMove = possibleMoves[i];
       }
-      game.undo();
+      beta = Math.min(beta, moveVal);
+      if (alpha >= beta) break;
     }
     return [bestVal, bestMove];
   }
 }
 
 var makeMove = function() {
-  var bestMove = makeMiniMaxMove(2, game, 'black', true)[1];
+  var bestMove = makeMiniMaxMove(3, game, 'black', true, -999, 999)[1];
   game.move(bestMove)
   board.position(game.fen())
 }
@@ -181,7 +174,6 @@ var cfg = {
     };
 console.log("Initializing chessboard");
 board = new ChessBoard('board', cfg);
-console.log(game.ascii())
 
 
 $(document).ready(function() {
