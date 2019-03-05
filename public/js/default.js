@@ -25,8 +25,9 @@ var makeRandomMove = function() {
   board.position(game.fen());
 };
 
-var evaluateBoard = function(game, min) {
-  var boardState = game;
+var evaluateBoard = function(game, colour) {
+  var boardState = game.ascii();
+  boardState = boardState.slice(0, boardState.length-24)
   var wPawns = 0;
   var wRooks = 0;
   var wKnights = 0;
@@ -58,17 +59,15 @@ var evaluateBoard = function(game, min) {
       case 'B': bBishops++; break;
     }
   }
-
   // calculate value for both sides based on piece strength
   var wValue = wPawns * 10 + wKnights * 30 + wBishops * 30
                 + wRooks * 50 + wQueens * 90 + wKings * 900;
 
   var bValue =  bPawns * 10 + bKnights * 30 + bBishops * 30
                 + bRooks * 50 + bQueens * 90 + bKings * 900;
+  var value = wValue * (colour == 'white' ? -1 : 1 ) + bValue * (colour == 'black' ? -1 : 1);
 
-  // return the white value if minimizing
-  if (min) return wValue;
-  return bValue;
+  return value
 }
 
 var makeMiniMaxMove = function() {
@@ -80,8 +79,10 @@ var makeMiniMaxMove = function() {
 
   for (var i = 0; i < possibleMoves.length; i++) {
     game.move(possibleMoves[i]);
-    var moveValue = evaluateBoard(game.fen(), true);
+    console.log(game.ascii())
+    var moveValue = evaluateBoard(game, 'black');
     game.undo();
+    console.log(possibleMoves[i], moveValue)
 
     if (moveValue > currentHighestValue) {
       currentHighestValue = moveValue;
@@ -98,7 +99,9 @@ var handleMove = function(source, target) {
     //undo move if illegal
     if (move == null) return 'snapback';
     removeGreySquares();
+
     //will update this as we develop more of the ai
+    console.log("New move")
     window.setTimeout(makeMiniMaxMove, 250);
 }
 
@@ -156,6 +159,7 @@ var cfg = {
     };
 console.log("Initializing chessboard");
 board = new ChessBoard('board', cfg);
+console.log(game.ascii())
 
 
 $(document).ready(function() {
