@@ -14,7 +14,9 @@ var onDragStart = function(source, piece, position, orientation) {
   }
 };
 
+// Evaluates the board state of a move for given colour
 var evaluateBoard = function(game, colour) {
+  // game.fen() was over counting white bishops if piece was moved to b column
   var boardState = game.ascii();
   boardState = boardState.slice(0, boardState.length-24)
   var wPawns = 0;
@@ -54,11 +56,14 @@ var evaluateBoard = function(game, colour) {
 
   var bValue =  bPawns * 10 + bKnights * 30 + bBishops * 30
                 + bRooks * 50 + bQueens * 90 + bKings * 900;
+  // Calculate board value for given colour
   var value = wValue * (colour == 'white' ? -1 : 1 ) + bValue * (colour == 'black' ? -1 : 1);
 
   return value
 }
 
+// Recursively searches move space to find optimal move for AI. Uses alpha-beta
+// pruning to eliminate branches that are worse than an already searched move.
 var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
   if (depth === 0) {
     return [evaluateBoard(game, colour), null];
@@ -71,6 +76,7 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
   possibleMoves.sort(function(a, b){return 0.5 - Math.random()});
   if (possibleMoves.length === 0) return null;
 
+  // Calculates maximal move if current iteration is maximizing
   if(isMaximizing) {
     bestVal = -999;
     for (var i = 0; i < possibleMoves.length; i++) {
@@ -86,6 +92,7 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
     }
     return [bestVal, bestMove];
   }
+  // Calculates minimal move if current iteration is minimizing
   else {
     bestVal = 999;
     for (var i = 0; i < possibleMoves.length; i++) {
@@ -103,12 +110,15 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
   }
 }
 
+// Calculates and makes the AI's move
 var makeMove = function() {
+  // Performs minimax search to depth of 3 turns
   var bestMove = makeMiniMaxMove(3, game, 'black', true, -999, 999)[1];
   game.move(bestMove)
   board.position(game.fen())
 }
 
+// Handles user move and calculates AI move
 var handleMove = function(source, target) {
     var move = game.move({from: source, to: target});
 
@@ -120,10 +130,12 @@ var handleMove = function(source, target) {
     window.setTimeout(makeMove, 1);
 }
 
+// Updates game board when piece is dropped
 var onSnapEnd = function() {
   board.position(game.fen());
 };
 
+// Triggers when mouse enters piece square
 var onMouseoverSquare = function(square, piece) {
   // get list of possible moves for this square
   var moves = game.moves({
@@ -143,14 +155,17 @@ var onMouseoverSquare = function(square, piece) {
   }
 };
 
+// Triggers when mouse leaves piece square
 var onMouseoutSquare = function(square, piece) {
   removeGreySquares();
 };
 
+// Removes gray squares from board
 var removeGreySquares = function() {
   $('#board .square-55d63').css('background', '');
 };
 
+// Sets given square to grey 
 var greySquare = function(square) {
   var squareEl = $('#board .square-' + square);
 
@@ -178,6 +193,6 @@ board = new ChessBoard('board', cfg);
 
 $(document).ready(function() {
   $("#restart").click(function() {
-    location.reload();
+    board = new ChessBoard('board', cfg);
   });
 });

@@ -13,4 +13,4 @@ Modifying the AI can be done there.
 2. Alpha Beta Pruning - DONE
 3. Piece-Square Tables
 4. Move Ordering
-5. UI Improvements
+5. UI Improvements - Ongoing
