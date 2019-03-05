@@ -1,4 +1,4 @@
-# CSCI4610---Chessbot
+# CSCI4610-Chessbot
 
 # Running Application
 To run the application, type nodejs main.js into the console. 
@@ -9,8 +9,8 @@ The behaviour of the AI and chessboard in general in located in public/default.j
 Modifying the AI can be done there.
 
 # THINGS TO DO 
-1. ---Minmax Decision Searching---
-2. ---Alpha Beta Pruning---
+1. Minmax Decision Searching - DONE
+2. Alpha Beta Pruning - DONE
 3. Piece-Square Tables
 4. Move Ordering
 5. UI Improvements
