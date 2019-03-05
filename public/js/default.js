@@ -70,27 +70,50 @@ var evaluateBoard = function(game, colour) {
   return value
 }
 
-var makeMiniMaxMove = function() {
-  var possibleMoves = game.moves();
-  var bestMove = null;
-  var currentHighestValue = -999;
-
-  if (possibleMoves.length === 0) return;
-
-  for (var i = 0; i < possibleMoves.length; i++) {
-    game.move(possibleMoves[i]);
-    console.log(game.ascii())
-    var moveValue = evaluateBoard(game, 'black');
-    game.undo();
-    console.log(possibleMoves[i], moveValue)
-
-    if (moveValue > currentHighestValue) {
-      currentHighestValue = moveValue;
-      bestMove = possibleMoves[i];
-    }
+var makeMiniMaxMove = function(depth, game, colour, isMaximizing) {
+  if (depth === 0) {
+    return [evaluateBoard(game, colour), null];
   }
-  game.move(bestMove);
-  board.position(game.fen());
+  var bestVal = null;
+  var bestMove = null;
+  var possibleMoves = game.moves();
+  // Sorting possible moves randomly so that in event of tie different moves
+  // will be picked. Mainly for turn 1.
+  possibleMoves.sort(function(a, b){return 0.5 - Math.random()});
+  if (possibleMoves.length === 0) return null;
+
+  if(isMaximizing) {
+    bestVal = -999;
+    for (var i = 0; i < possibleMoves.length; i++) {
+      game.move(possibleMoves[i]);
+      moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing)[0];
+      if ( moveVal > bestVal) {
+        bestVal = moveVal;
+        bestMove = possibleMoves[i];
+      }
+      game.undo();
+    }
+    return [bestVal, bestMove];
+  }
+  else {
+    bestVal = 999;
+    for (var i = 0; i < possibleMoves.length; i++) {
+      game.move(possibleMoves[i]);
+      moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing)[0];
+      if ( moveVal < bestVal) {
+        bestVal = moveVal;
+        bestMove = possibleMoves[i];
+      }
+      game.undo();
+    }
+    return [bestVal, bestMove];
+  }
+}
+
+var makeMove = function() {
+  var bestMove = makeMiniMaxMove(2, game, 'black', true)[1];
+  game.move(bestMove)
+  board.position(game.fen())
 }
 
 var handleMove = function(source, target) {
@@ -101,8 +124,7 @@ var handleMove = function(source, target) {
     removeGreySquares();
 
     //will update this as we develop more of the ai
-    console.log("New move")
-    window.setTimeout(makeMiniMaxMove, 250);
+    window.setTimeout(makeMove, 1);
 }
 
 var onSnapEnd = function() {
