@@ -1,11 +1,60 @@
 var game = new Chess();
 var board;
 
-var pieceWeight = {w: {p: 10, n: 30, b: 30, r: 50, q: 90, k: 900},
-                   b: {p: -10, n: -30, b: -30, r: -50, q: -90, k: -900}};
+var pawnPieceSquare = [[ 0,  0,  0,  0,  0,  0,  0,  0],
+                       [50, 50, 50, 50, 50, 50, 50, 50],
+                       [10, 10, 20, 30, 30, 20, 10, 10],
+                       [ 5,  5, 10, 25, 25, 10,  5,  5],
+                       [ 0,  0,  0, 20, 20,  0,  0,  0],
+                       [ 5, -5,-10,  0,  0,-10, -5,  5],
+                       [ 5, 10, 10,-20,-20, 10, 10,  5],
+                       [ 0,  0,  0,  0,  0,  0,  0,  0]];
 
-var pieces = {w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1},
-              b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}};
+var knightPieceSquare = [[-50,-40,-30,-30,-30,-30,-40,-50],
+                         [-40,-20,  0,  0,  0,  0,-20,-40],
+                         [-30,  0, 10, 15, 15, 10,  0,-30],
+                         [-30,  5, 15, 20, 20, 15,  5,-30],
+                         [-30,  0, 15, 20, 20, 15,  0,-30],
+                         [-30,  5, 10, 15, 15, 10,  5,-30],
+                         [-40,-20,  0,  5,  5,  0,-20,-40],
+                         [-50,-40,-30,-30,-30,-30,-40,-50]];
+
+var bishopPieceSquare = [[-20,-10,-10,-10,-10,-10,-10,-20],
+                         [-10,  0,  0,  0,  0,  0,  0,-10],
+                         [-10,  0,  5, 10, 10,  5,  0,-10],
+                         [-10,  5,  5, 10, 10,  5,  5,-10],
+                         [-10,  0, 10, 10, 10, 10,  0,-10],
+                         [-10, 10, 10, 10, 10, 10, 10,-10],
+                         [-10,  5,  0,  0,  0,  0,  5,-10],
+                         [-20,-10,-10,-10,-10,-10,-10,-20]];
+
+var rookPieceSquare = [[  0,  0,  0,  0,  0,  0,  0,  0],
+                       [ 5, 10, 10, 10, 10, 10, 10,  5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [ 0,  0,  0,  5,  5,  0,  0,  0]];
+
+var queenPieceSquare = [[-20,-10,-10, -5, -5,-10,-10,-20],
+                        [-10,  0,  0,  0,  0,  0,  0,-10],
+                        [-10,  0,  5,  5,  5,  5,  0,-10],
+                        [ -5,  0,  5,  5,  5,  5,  0, -5],
+                        [  0,  0,  5,  5,  5,  5,  0, -5],
+                        [-10,  5,  5,  5,  5,  5,  0, -1],
+                        [-10,  0,  5,  0,  0,  0,  0,-10],
+                        [-20,-10,-10, -5, -5,-10,-10,-20]];
+
+var kingPieceSquare = [[-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-20,-30,-30,-40,-40,-30,-30,-20],
+                       [-10,-20,-20,-20,-20,-20,-20,-10],
+                       [ 20, 20,  0,  0,  0,  0, 20, 20],
+                       [ 20, 30, 10,  0,  0, 10, 30, 20]];
+
 
 //only allows white pieces to be picked up, only lets you pick up pieces if the game isn't over
 var onDragStart = function(source, piece, position, orientation) {
@@ -14,40 +63,74 @@ var onDragStart = function(source, piece, position, orientation) {
   }
 };
 
-// Evaluates the board state of a move for given colour
+var asciiToCharArray = function(game) {
+  var boardState = game.ascii();
+  boardState = boardState.slice(29, boardState.length-57);
+  boardState = boardState.replace(/[ |\n0-9]/g, '');
+  var boardArray = [];
+  var temp = []
+
+  j = 1
+  for (var i = 0; i < boardState.length; i++) {
+    if(boardState.charAt(i) == '.') temp.push(" ");
+    else temp.push(boardState.charAt(i));
+
+    if (i > 0 && j%8 == 0) {
+      j = 0;
+      boardArray.push(temp);
+      temp = [];
+    }
+
+    j++;
+  }
+  return boardArray;
+}
+// the board state of a move for given colour
 var evaluateBoard = function(game, colour) {
   // game.fen() was over counting white bishops if piece was moved to b column
-  var boardState = game.ascii();
-  boardState = boardState.slice(0, boardState.length-24)
-  var wPawns = 0;
-  var wRooks = 0;
-  var wKnights = 0;
-  var wQueens = 0;
-  var wKings = 0;
-  var wBishops = 0;
-
-  var bPawns = 0;
-  var bRooks = 0;
-  var bKnights = 0;
-  var bQueens = 0;
-  var bKings = 0;
-  var bBishops = 0;
+  var boardState = asciiToCharArray(game);
+  var value = 0;
 
   // count each piece on the board
   for (var i = 0; i < boardState.length; i++) {
-    switch (boardState[i]) {
-      case 'p': wPawns++; break;
-      case 'r': wRooks++; break;
-      case 'n': wKnights++; break;
-      case 'q': wQueens++; break;
-      case 'k': wKings++; break;
-      case 'b': wBishops++; break;
-      case 'P': bPawns++; break;
-      case 'R': bRooks++; break;
-      case 'N': bKnights++; break;
-      case 'Q': bQueens++; break;
-      case 'K': bKings++; break;
-      case 'B': bBishops++; break;
+    for (var j = 0; j < boardState[i].length; j++) {
+    switch (boardState[i][j]) {
+      case 'p': 
+                value = value + (colour == 'white' ? -1 : 1 )pawnPieceSquare[i][j]; 
+                break;
+      case 'r': 
+                value = value + (colour == 'white' ? -1 : 1 )rookPieceSquare[i][j];
+                break;
+      case 'n': 
+                value = value + (colour == 'white' ? -1 : 1 )knightPieceSquare[i][j];
+                break;
+      case 'q': 
+                value = value + (colour == 'white' ? -1 : 1 )queenPieceSquare[i][j];
+                break;
+      case 'k':
+                value = value + (colour == 'white' ? -1 : 1 )kingPieceSquare[i][j];
+                break;
+      case 'b': 
+                value = value + (colour == 'white' ? -1 : 1 )bishopPieceSquare[i][j];
+                break;
+      case 'P': 
+                value = value + (colour == 'black' ? -1 : 1 )pawnPieceSquare[i][j];  
+                break;
+      case 'R': 
+                value = value + (colour == 'black' ? -1 : 1 )rookPieceSquare[i][j];  
+                break;
+      case 'N': 
+                value = value + (colour == 'black' ? -1 : 1 )knightPieceSquare[i][j];  
+                break;
+      case 'Q': 
+                value = value + (colour == 'black' ? -1 : 1 )queenPieceSquare[i][j];  
+                break;
+      case 'K':
+                value = value + (colour == 'black' ? -1 : 1 )kingPieceSquare[i][j];  
+                break;
+      case 'B': 
+                value = value + (colour == 'black' ? -1 : 1 )bishopPieceSquare[i][j];  
+                break;
     }
   }
   // calculate value for both sides based on piece strength
