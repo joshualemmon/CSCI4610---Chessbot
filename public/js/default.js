@@ -2,58 +2,58 @@ var game = new Chess();
 var board;
 
 var pawnPieceSquare = [[ 0,  0,  0,  0,  0,  0,  0,  0],
-                       [50, 50, 50, 50, 50, 50, 50, 50],
-                       [10, 10, 20, 30, 30, 20, 10, 10],
-                       [ 5,  5, 10, 25, 25, 10,  5,  5],
-                       [ 0,  0,  0, 20, 20,  0,  0,  0],
-                       [ 5, -5,-10,  0,  0,-10, -5,  5],
                        [ 5, 10, 10,-20,-20, 10, 10,  5],
+                       [ 5, -5,-10,  0,  0,-10, -5,  5],
+                       [ 0,  0,  0, 20, 20,  0,  0,  0],
+                       [ 5,  5, 10, 25, 25, 10,  5,  5],
+                       [10, 10, 20, 30, 30, 20, 10, 10],
+                       [50, 50, 50, 50, 50, 50, 50, 50],
                        [ 0,  0,  0,  0,  0,  0,  0,  0]];
 
 var knightPieceSquare = [[-50,-40,-30,-30,-30,-30,-40,-50],
-                         [-40,-20,  0,  0,  0,  0,-20,-40],
-                         [-30,  0, 10, 15, 15, 10,  0,-30],
-                         [-30,  5, 15, 20, 20, 15,  5,-30],
-                         [-30,  0, 15, 20, 20, 15,  0,-30],
-                         [-30,  5, 10, 15, 15, 10,  5,-30],
                          [-40,-20,  0,  5,  5,  0,-20,-40],
+                         [-30,  5, 10, 15, 15, 10,  5,-30],
+                         [-30,  0, 15, 20, 20, 15,  0,-30],
+                         [-30,  5, 15, 20, 20, 15,  5,-30],
+                         [-30,  0, 10, 15, 15, 10,  0,-30],
+                         [-40,-20,  0,  0,  0,  0,-20,-40],
                          [-50,-40,-30,-30,-30,-30,-40,-50]];
 
 var bishopPieceSquare = [[-20,-10,-10,-10,-10,-10,-10,-20],
-                         [-10,  0,  0,  0,  0,  0,  0,-10],
-                         [-10,  0,  5, 10, 10,  5,  0,-10],
-                         [-10,  5,  5, 10, 10,  5,  5,-10],
-                         [-10,  0, 10, 10, 10, 10,  0,-10],
-                         [-10, 10, 10, 10, 10, 10, 10,-10],
                          [-10,  5,  0,  0,  0,  0,  5,-10],
+                         [-10, 10, 10, 10, 10, 10, 10,-10],
+                         [-10,  0, 10, 10, 10, 10,  0,-10],
+                         [-10,  5,  5, 10, 10,  5,  5,-10],
+                         [-10,  0,  5, 10, 10,  5,  0,-10],
+                         [-10,  0,  0,  0,  0,  0,  0,-10],
                          [-20,-10,-10,-10,-10,-10,-10,-20]];
 
-var rookPieceSquare = [[  0,  0,  0,  0,  0,  0,  0,  0],
+var rookPieceSquare = [[  0,  0,  0,  5,  5,  0,  0,  0],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
+                       [-5,  0,  0,  0,  0,  0,  0, -5],
                        [ 5, 10, 10, 10, 10, 10, 10,  5],
-                       [-5,  0,  0,  0,  0,  0,  0, -5],
-                       [-5,  0,  0,  0,  0,  0,  0, -5],
-                       [-5,  0,  0,  0,  0,  0,  0, -5],
-                       [-5,  0,  0,  0,  0,  0,  0, -5],
-                       [-5,  0,  0,  0,  0,  0,  0, -5],
-                       [ 0,  0,  0,  5,  5,  0,  0,  0]];
+                       [ 0,  0,  0,  0,  0,  0,  0,  0]];
 
 var queenPieceSquare = [[-20,-10,-10, -5, -5,-10,-10,-20],
-                        [-10,  0,  0,  0,  0,  0,  0,-10],
-                        [-10,  0,  5,  5,  5,  5,  0,-10],
-                        [ -5,  0,  5,  5,  5,  5,  0, -5],
-                        [  0,  0,  5,  5,  5,  5,  0, -5],
-                        [-10,  5,  5,  5,  5,  5,  0, -1],
                         [-10,  0,  5,  0,  0,  0,  0,-10],
+                        [-10,  5,  5,  5,  5,  5,  0, -1],
+                        [  0,  0,  5,  5,  5,  5,  0, -5],
+                        [ -5,  0,  5,  5,  5,  5,  0, -5],
+                        [-10,  0,  5,  5,  5,  5,  0,-10],
+                        [-10,  0,  0,  0,  0,  0,  0,-10],
                         [-20,-10,-10, -5, -5,-10,-10,-20]];
 
-var kingPieceSquare = [[-30,-40,-40,-50,-50,-40,-40,-30],
-                       [-30,-40,-40,-50,-50,-40,-40,-30],
-                       [-30,-40,-40,-50,-50,-40,-40,-30],
-                       [-30,-40,-40,-50,-50,-40,-40,-30],
-                       [-20,-30,-30,-40,-40,-30,-30,-20],
-                       [-10,-20,-20,-20,-20,-20,-20,-10],
+var kingPieceSquare = [[ 20, 30, 10,  0,  0, 10, 30, 20],
                        [ 20, 20,  0,  0,  0,  0, 20, 20],
-                       [ 20, 30, 10,  0,  0, 10, 30, 20]];
+                       [-10,-20,-20,-20,-20,-20,-20,-10],
+                       [-20,-30,-30,-40,-40,-30,-30,-20],
+                       [-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-30,-40,-40,-50,-50,-40,-40,-30],
+                       [-30,-40,-40,-50,-50,-40,-40,-30]];
 
 
 //only allows white pieces to be picked up, only lets you pick up pieces if the game isn't over
@@ -61,7 +61,7 @@ var onDragStart = function(source, piece, position, orientation) {
   if (game.in_checkmate() === true || game.in_draw() === true || piece.search(/^b/) !== -1) {
     return false;
   }
-};
+}
 
 var asciiToCharArray = function(game) {
   var boardState = game.ascii();
@@ -90,59 +90,56 @@ var evaluateBoard = function(game, colour) {
   // game.fen() was over counting white bishops if piece was moved to b column
   var boardState = asciiToCharArray(game);
   var value = 0;
-
+  var neg = (colour == 'black' ? -1 : 1 );
+  console.log(colour, neg);
   // count each piece on the board
   for (var i = 0; i < boardState.length; i++) {
     for (var j = 0; j < boardState[i].length; j++) {
     switch (boardState[i][j]) {
       case 'p': 
-                value = value + (colour == 'white' ? -1 : 1 )pawnPieceSquare[i][j]; 
+                value = value + pawnPieceSquare[i][j] +10; 
                 break;
       case 'r': 
-                value = value + (colour == 'white' ? -1 : 1 )rookPieceSquare[i][j];
+                value = value + rookPieceSquare[i][j] + 50;
                 break;
       case 'n': 
-                value = value + (colour == 'white' ? -1 : 1 )knightPieceSquare[i][j];
+                value = value + knightPieceSquare[i][j] + 30;
                 break;
       case 'q': 
-                value = value + (colour == 'white' ? -1 : 1 )queenPieceSquare[i][j];
+                value = value + queenPieceSquare[i][j] + 90;
                 break;
       case 'k':
-                value = value + (colour == 'white' ? -1 : 1 )kingPieceSquare[i][j];
+                value = value + kingPieceSquare[i][j] + 900;
                 break;
       case 'b': 
-                value = value + (colour == 'white' ? -1 : 1 )bishopPieceSquare[i][j];
+                value = value + bishopPieceSquare[i][j] +30;
                 break;
+      // Check mirrored values for white
       case 'P': 
-                value = value + (colour == 'black' ? -1 : 1 )pawnPieceSquare[i][j];  
+                value = value + -1*pawnPieceSquare[i][7-j] -10;  
                 break;
       case 'R': 
-                value = value + (colour == 'black' ? -1 : 1 )rookPieceSquare[i][j];  
+                value = value + -1*rookPieceSquare[i][7-j] -50;  
                 break;
       case 'N': 
-                value = value + (colour == 'black' ? -1 : 1 )knightPieceSquare[i][j];  
+                value = value + -1*knightPieceSquare[i][7-j] -30;  
                 break;
       case 'Q': 
-                value = value + (colour == 'black' ? -1 : 1 )queenPieceSquare[i][j];  
+                value = value + -1*queenPieceSquare[i][7-j] -90;  
                 break;
       case 'K':
-                value = value + (colour == 'black' ? -1 : 1 )kingPieceSquare[i][j];  
+                value = value + -1*kingPieceSquare[i][7-j] -900;  
                 break;
       case 'B': 
-                value = value + (colour == 'black' ? -1 : 1 )bishopPieceSquare[i][j];  
+                value = value + -1*bishopPieceSquare[i][7-j] -30;  
                 break;
+      }
     }
   }
-  // calculate value for both sides based on piece strength
-  var wValue = wPawns * 10 + wKnights * 30 + wBishops * 30
-                + wRooks * 50 + wQueens * 90 + wKings * 900;
+  console.log(game.ascii());
+  console.log(value);
 
-  var bValue =  bPawns * 10 + bKnights * 30 + bBishops * 30
-                + bRooks * 50 + bQueens * 90 + bKings * 900;
-  // Calculate board value for given colour
-  var value = wValue * (colour == 'white' ? -1 : 1 ) + bValue * (colour == 'black' ? -1 : 1);
-
-  return value
+  return value;
 }
 
 // Recursively searches move space to find optimal move for AI. Uses alpha-beta
@@ -161,7 +158,7 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
 
   // Calculates maximal move if current iteration is maximizing
   if(isMaximizing) {
-    bestVal = -999;
+    bestVal = -9999;
     for (var i = 0; i < possibleMoves.length; i++) {
       game.move(possibleMoves[i]);
       moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing, alpha, beta)[0];
@@ -177,7 +174,7 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
   }
   // Calculates minimal move if current iteration is minimizing
   else {
-    bestVal = 999;
+    bestVal = 9999;
     for (var i = 0; i < possibleMoves.length; i++) {
       game.move(possibleMoves[i]);
       moveVal = makeMiniMaxMove(depth-1, game, colour, !isMaximizing, alpha, beta)[0];
@@ -196,7 +193,11 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
 // Calculates and makes the AI's move
 var makeMove = function() {
   // Performs minimax search to depth of 3 turns
-  var bestMove = makeMiniMaxMove(3, game, 'black', true, -999, 999)[1];
+  var move = makeMiniMaxMove(3, game, 'black', true, -999, 999);
+  if (move == null) {
+    return true;
+  }
+  var bestMove = move[1];
   game.move(bestMove)
   board.position(game.fen())
 }
@@ -205,6 +206,7 @@ var makeMove = function() {
 var handleMove = function(source, target) {
     var move = game.move({from: source, to: target});
 
+    if (move == true) console.log("Checkmate"); 
     //undo move if illegal
     if (move == null) return 'snapback';
     removeGreySquares();
@@ -216,7 +218,7 @@ var handleMove = function(source, target) {
 // Updates game board when piece is dropped
 var onSnapEnd = function() {
   board.position(game.fen());
-};
+}
 
 // Triggers when mouse enters piece square
 var onMouseoverSquare = function(square, piece) {
@@ -236,17 +238,17 @@ var onMouseoverSquare = function(square, piece) {
   for (var i = 0; i < moves.length; i++) {
     greySquare(moves[i].to);
   }
-};
+}
 
 // Triggers when mouse leaves piece square
 var onMouseoutSquare = function(square, piece) {
   removeGreySquares();
-};
+}
 
 // Removes gray squares from board
 var removeGreySquares = function() {
   $('#board .square-55d63').css('background', '');
-};
+}
 
 // Sets given square to grey 
 var greySquare = function(square) {
@@ -258,7 +260,7 @@ var greySquare = function(square) {
   }
 
   squareEl.css('background', background);
-};
+}
 
 //board configuration
 var cfg = {
