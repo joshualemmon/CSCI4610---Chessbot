@@ -11,6 +11,7 @@ Modifying the AI can be done there.
 # THINGS TO DO 
 1. Minmax Decision Searching - DONE
 2. Alpha Beta Pruning - DONE
-3. Piece-Square Tables
+3. Piece-Square Tables - DONE? Needs testing
 4. Move Ordering
 5. UI Improvements - Ongoing
+	- Win/Loss tracker
