@@ -66,14 +66,23 @@ var onDragStart = function(source, piece, position, orientation) {
   }
 }
 
-var updateScore = function() {
-  if (game.in_checkmate()) {
-    if (game.turn() == "w") userWins++;
-    else botWins++;
-    console.log("Win");
-    $("#userScore").html("User Score: " + userWins + " Wins / " + botWins + " Losses");
-    $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
+var updateScore = function(forfeit) {
+  if (forfeit) {
+    botWins++;
+    $("#winText").html("Chessbot wins by forfeit!");
   }
+  else if (game.in_checkmate()) {
+    if (game.turn() == "w")  {
+      userWins++;
+      $("#winText").html("User wins by checkmate!");
+    }
+    else {
+      botWins++;
+      $("#winText").html("Chessbot wins by checkmate!");
+    }
+  }
+  $("#userScore").html("User Score: " + userWins + " Wins / " + botWins + " Losses");
+  $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
 }
 
 var asciiToCharArray = function(game) {
@@ -205,6 +214,7 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
 
 // Calculates and makes the AI's move
 var makeMove = function() {
+  updateScore(false);
   // Performs minimax search to depth of 3 turns
   var move = makeMiniMaxMove(3, game, 'black', true, -999, 999);
   if (move == null) {
@@ -213,7 +223,7 @@ var makeMove = function() {
   var bestMove = move[1];
   game.move(bestMove)
   board.position(game.fen())
-  updateScore();
+  updateScore(false);
 }
 
 // Handles user move and calculates AI move
@@ -294,5 +304,12 @@ $(document).ready(function() {
   $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
   $("#restart").click(function() {
     board = new ChessBoard('board', cfg);
+    game = new Chess();
+    $("#winText").html("");
+  });
+  $("#forfeit").click(function() {
+    game = new Chess('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
+    console.log(game.in_checkmate());
+    updateScore(true);
   });
 });
