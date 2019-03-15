@@ -3,6 +3,7 @@ var board;
 
 var userWins = 0;
 var botWins = 0;
+var debug = false;
 
 var pawnPieceSquare = [[ 0,  0,  0,  0,  0,  0,  0,  0],
                        [ 5, 10, 10,-20,-20, 10, 10,  5],
@@ -158,8 +159,11 @@ var evaluateBoard = function(game, colour) {
       }
     }
   }
-  console.log(game.ascii());
-  console.log(value);
+  if (debug) {
+    console.log(game.ascii());
+    console.log(value);
+  }
+
 
   return value;
 }
@@ -311,5 +315,9 @@ $(document).ready(function() {
     game = new Chess('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
     console.log(game.in_checkmate());
     updateScore(true);
+  });
+  $("#debugOutput").click(function() {
+    debug = !debug;
+    console.log(debug);
   });
 });
