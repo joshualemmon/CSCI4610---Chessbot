@@ -1,6 +1,9 @@
 var game = new Chess();
 var board;
 
+var userWins = 0;
+var botWins = 0;
+
 var pawnPieceSquare = [[ 0,  0,  0,  0,  0,  0,  0,  0],
                        [ 5, 10, 10,-20,-20, 10, 10,  5],
                        [ 5, -5,-10,  0,  0,-10, -5,  5],
@@ -63,6 +66,16 @@ var onDragStart = function(source, piece, position, orientation) {
   }
 }
 
+var updateScore = function() {
+  if (game.in_checkmate()) {
+    if (game.turn() == "w") userWins++;
+    else botWins++;
+    console.log("Win");
+    $("#userScore").html("User Score: " + userWins + " Wins / " + botWins + " Losses");
+    $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
+  }
+}
+
 var asciiToCharArray = function(game) {
   var boardState = game.ascii();
   boardState = boardState.slice(29, boardState.length-57);
@@ -96,42 +109,42 @@ var evaluateBoard = function(game, colour) {
   for (var i = 0; i < boardState.length; i++) {
     for (var j = 0; j < boardState[i].length; j++) {
     switch (boardState[i][j]) {
-      case 'p': 
-                value = value + pawnPieceSquare[i][j] +10; 
+      case 'p':
+                value = value + pawnPieceSquare[i][j] +10;
                 break;
-      case 'r': 
+      case 'r':
                 value = value + rookPieceSquare[i][j] + 50;
                 break;
-      case 'n': 
+      case 'n':
                 value = value + knightPieceSquare[i][j] + 30;
                 break;
-      case 'q': 
+      case 'q':
                 value = value + queenPieceSquare[i][j] + 90;
                 break;
       case 'k':
                 value = value + kingPieceSquare[i][j] + 900;
                 break;
-      case 'b': 
+      case 'b':
                 value = value + bishopPieceSquare[i][j] +30;
                 break;
       // Check mirrored values for white
-      case 'P': 
-                value = value + -1*pawnPieceSquare[i][7-j] -10;  
+      case 'P':
+                value = value + -1*pawnPieceSquare[i][7-j] -10;
                 break;
-      case 'R': 
-                value = value + -1*rookPieceSquare[i][7-j] -50;  
+      case 'R':
+                value = value + -1*rookPieceSquare[i][7-j] -50;
                 break;
-      case 'N': 
-                value = value + -1*knightPieceSquare[i][7-j] -30;  
+      case 'N':
+                value = value + -1*knightPieceSquare[i][7-j] -30;
                 break;
-      case 'Q': 
-                value = value + -1*queenPieceSquare[i][7-j] -90;  
+      case 'Q':
+                value = value + -1*queenPieceSquare[i][7-j] -90;
                 break;
       case 'K':
-                value = value + -1*kingPieceSquare[i][7-j] -900;  
+                value = value + -1*kingPieceSquare[i][7-j] -900;
                 break;
-      case 'B': 
-                value = value + -1*bishopPieceSquare[i][7-j] -30;  
+      case 'B':
+                value = value + -1*bishopPieceSquare[i][7-j] -30;
                 break;
       }
     }
@@ -200,13 +213,14 @@ var makeMove = function() {
   var bestMove = move[1];
   game.move(bestMove)
   board.position(game.fen())
+  updateScore();
 }
 
 // Handles user move and calculates AI move
 var handleMove = function(source, target) {
     var move = game.move({from: source, to: target});
 
-    if (move == true) console.log("Checkmate"); 
+    if (move == true) console.log("Checkmate");
     //undo move if illegal
     if (move == null) return 'snapback';
     removeGreySquares();
@@ -250,7 +264,7 @@ var removeGreySquares = function() {
   $('#board .square-55d63').css('background', '');
 }
 
-// Sets given square to grey 
+// Sets given square to grey
 var greySquare = function(square) {
   var squareEl = $('#board .square-' + square);
 
@@ -275,8 +289,9 @@ var cfg = {
 console.log("Initializing chessboard");
 board = new ChessBoard('board', cfg);
 
-
 $(document).ready(function() {
+  $("#userScore").html("User Score: " + userWins + " Wins / " + botWins + " Losses");
+  $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
   $("#restart").click(function() {
     board = new ChessBoard('board', cfg);
   });
