@@ -73,7 +73,7 @@ var updateScore = function(forfeit) {
     $("#winText").html("Chessbot wins by forfeit!");
   }
   else if (game.in_checkmate()) {
-    if (game.turn() == "w")  {
+    if (game.turn() == "b")  {
       userWins++;
       $("#winText").html("User wins by checkmate!");
     }
@@ -180,7 +180,10 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
   // Sorting possible moves randomly so that in event of tie different moves
   // will be picked. Mainly for turn 1.
   possibleMoves.sort(function(a, b){return 0.5 - Math.random()});
-  if (possibleMoves.length === 0) return null;
+  if (possibleMoves.length === 0) {
+    updateScore(false);
+    return null;
+  }
 
   // Calculates maximal move if current iteration is maximizing
   if(isMaximizing) {
@@ -218,16 +221,14 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
 
 // Calculates and makes the AI's move
 var makeMove = function() {
-  updateScore(false);
   // Performs minimax search to depth of 3 turns
   var move = makeMiniMaxMove(3, game, 'black', true, -999, 999);
-  if (move == null) {
+  if (move === null) {
     return true;
   }
   var bestMove = move[1];
-  game.move(bestMove)
-  board.position(game.fen())
-  updateScore(false);
+  game.move(bestMove);
+  board.position(game.fen());
 }
 
 // Handles user move and calculates AI move
@@ -313,8 +314,6 @@ $(document).ready(function() {
   });
   $("#forfeit").click(function() {
     game = new Chess('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
-    console.log(game.in_checkmate());
-    updateScore(true);
   });
   $("#debugOutput").click(function() {
     debug = !debug;
