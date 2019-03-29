@@ -1,5 +1,6 @@
 var game = new Chess();
 var board;
+var minimaxDepth = 3;
 
 var userWins = 0;
 var botWins = 0;
@@ -222,7 +223,7 @@ var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
 // Calculates and makes the AI's move
 var makeMove = function() {
   // Performs minimax search to depth of 3 turns
-  var move = makeMiniMaxMove(3, game, 'black', true, -999, 999);
+  var move = makeMiniMaxMove(minimaxDepth, game, 'black', true, -999, 999);
   if (move === null) {
     return true;
   }
@@ -314,6 +315,20 @@ $(document).ready(function() {
   });
   $("#forfeit").click(function() {
     game = new Chess('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
+    updateScore(true);
+  });
+  $('#queenMode').click(function() {
+    game = new Chess('qqqqkqqq/pppppppp/8/8/8/8/PPPPPPPP/QQQQKQQQ w KQkq - 1 3');
+    board.position(game.fen());
+  });
+  $('#depth').click(function() {
+    minimaxDepth = $("#depthValue").val();
+    if (minimaxDepth <= 0) {
+      console.log("Depth must at least be 1");
+      minimaxDepth = 1;
+      $("#depthValue").val(minimaxDepth);
+    }
+    console.log(depth);
   });
   $("#debugOutput").click(function() {
     debug = !debug;
