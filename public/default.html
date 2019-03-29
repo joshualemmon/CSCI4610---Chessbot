@@ -2,6 +2,7 @@
 	<head>
 		<title>Chessbot</title>
 	    <link rel="stylesheet" href="css/chessboard-0.3.0.min.css">
+			<link rel="stylesheet" href="css/default.css">
 	   	<script src="js/chess.min.js"></script>
 	   	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	    <script src="js/chessboard-0.3.0.min.js"></script>
@@ -11,13 +12,13 @@
 		<center><h3 id="winText" style="margin-top:10px"></h3></center>
 		<center><div id="board" style="width: 400px"></div></center>
 	    <script src="js/default.js"></script>
-		<center><button id="restart" type="button" style="margin-top:10px">Restart</button></center>
-		<center><button id="forfeit" type="button" style="margin-top:10px">Forfeit</button></center>
-		<center><button id="debugOutput" type="button" style="margin-top:10px">Toggle Debug</button></center>
-		<center><button id="queenMode" type="button" style="margin-top:10px">Queen Mode</button></center>
-		<center style="margin-top:10px">Minimax Depth: <input type="text" id="depthValue">
+		<center><button id="restart" type="button">Restart</button>
+		<button id="forfeit" type="button">Forfeit</button></center>
+		<center><button id="debugOutput" type="button">Toggle Debug</button>
+		<button id="queenMode" type="button">Queen Mode</button></center>
+		<center>Minimax Depth: <input type="text" id="depthValue">
 		<button id="depth" type="button">Submit Depth</button></center>
-		<center><div id="userScore" style="margin-top:10px"></div></center>
-		<center><div id="botScore" style="margin-top:10px"></div></center>
+		<center><div id="userScore"></div></center>
+		<center><div id="botScore"></div></center>
 	</body>
 </html>
