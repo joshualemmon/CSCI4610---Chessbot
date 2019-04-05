@@ -83,7 +83,7 @@ var updateScore = function(forfeit) {
       $("#winText").html("Chessbot wins by checkmate!");
     }
   } else if (game.in_draw()) {
-    $("#winText").html("Match ended in a draw.");
+    $("#winText").html("Game ended in a draw.");
   }
   $("#userScore").html("User Score: " + userWins + " Wins / " + botWins + " Losses");
   $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
@@ -310,7 +310,7 @@ board = new ChessBoard('board', cfg);
 $(document).ready(function() {
   $("#userScore").html("User Score: " + userWins + " Wins / " + botWins + " Losses");
   $("#botScore").html("Chessbot Score: " + botWins + " Wins / " + userWins + " Losses");
-  $("$depthValue").val(minimaxDepth);
+  $("#depthValue").val(minimaxDepth);
   $("#restart").click(function() {
     board = new ChessBoard('board', cfg);
     game = new Chess();
