@@ -171,6 +171,43 @@ var evaluateBoard = function(game, colour) {
   return value;
 }
 
+var iterativeDeepening = function(game, timeLimit) {
+    var startTime = Date.now()
+    var endTime = startT + timeLimit
+    var depth = 1
+    var winningMove = 900
+    score = 0
+    var searchThresh = false
+
+    while (True) {
+
+      var currentTime =
+
+      if (currentTime >= endTime) {
+        break
+      }
+
+      var searchResult = search(game, depth, timeLimit)
+    
+      if (searchResult >= winningMove) {
+        return searchResult
+      }
+
+      if (!searchThresh) {
+        score = searchResult
+      }
+
+      depth++
+    }
+
+    return score
+
+
+
+
+
+}
+
 // Recursively searches move space to find optimal move for AI. Uses alpha-beta
 // pruning to eliminate branches that are worse than an already searched move.
 var makeMiniMaxMove = function(depth, game, colour, isMaximizing, alpha, beta) {
